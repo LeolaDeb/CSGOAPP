@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ProgMob_Poject</string>
+    <string name="action_settings">Paramètres</string>
+    <string name="next">Suivant</string>
+    <string name="previous">Précédent</string>
+    <string name="team_a">Équipe A</string>
+    <string name="team_b">Équipe B</string>
+    <string name="score_team_a">Score Équipe A</string>
+    <string name="score_team_b">Score Équipe B</string>
+    <string name="vs">VS</string>
+    <string name="location">Localisation</string>
+    <string name="address">Adresse</string>
+    <string name="coordinates">Coordonnées</string>
+    <string name="date">Date :</string>
+    <string name="picture">Photo</string>
+    <string name="submit">Valider</string>
+    <string name="select">Sélectionner</string>
+    <string name="Add_new_Match">Ajouter Match</string>
+    <string name="View_Matches">Voir Matches</string>
+    <string name="Home">Accueil</string>
+    <string name="Select_Match">Selectionner match</string>
+    <string name="landscape">Vue Paysage</string>
+</resources>

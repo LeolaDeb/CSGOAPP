@@ -85,15 +85,11 @@ public class Controller {
 
 
             resultSet.close();
-
-        } catch(SQLException sqle){
-            // TODO Auto-generated catch block
-            sqle.printStackTrace();
-            //throw sqle;
+            return match;
         } catch(Exception e){
+            e.printStackTrace();
             throw e;
         }
-        return match;
     }
 
     public static int addMatch(Match match) throws Exception{
@@ -123,8 +119,6 @@ public class Controller {
                 }
             }
 
-        } catch (SQLException sqle){
-            sqle.printStackTrace();
         }
         catch(Exception e){
             throw e;

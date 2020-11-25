@@ -1,8 +1,11 @@
 package fr.android.progmob_poject;
 
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -17,15 +20,19 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import androidx.fragment.app.Fragment;
 import fr.android.progmob_poject.jdbc.Controller;
 import fr.android.progmob_poject.model.Match;
+import fr.android.progmob_poject.sqlite.SQLiteDatabaseHelper;
 
 public class SelectMatchFragment extends Fragment implements View.OnClickListener {
     private Spinner spinner;
     private MainActivity mainActivity;
     private Button select;
+    SQLiteDatabaseHelper mSQLiteDatabaseHelper;
+    private Boolean onlineMod = false;
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,
@@ -37,26 +44,85 @@ public class SelectMatchFragment extends Fragment implements View.OnClickListene
         spinner = (Spinner) rootView.findViewById(R.id.match_spinner);
         mainActivity = (MainActivity) getActivity();
         select.setOnClickListener(this);
+        spinner.setOnTouchListener(Spinner_OnTouch);
+        //spinner.setOnKeyListener(Spinner_OnKey);
 
+        mSQLiteDatabaseHelper = new SQLiteDatabaseHelper(mainActivity);
         AsyncCallerGetAllMatches task = new AsyncCallerGetAllMatches();
         task.execute();
         return rootView;
     }
+    private View.OnTouchListener Spinner_OnTouch = new View.OnTouchListener() {
+        public boolean onTouch(View v, MotionEvent event) {
+            //Toast.makeText(mainActivity, "Couldn't connect to database, retrieved data locally", Toast.LENGTH_LONG).show();
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                if (spinner.getAdapter() == null){
+                    List<Match> matches =  mSQLiteDatabaseHelper.getData();
+                    List<String> strMatches = new ArrayList<String>();
+                    for (Match m : matches){
+                        String teamA = m.getTeam_a();
+                        String teamB = m.getTeam_b();
+                        strMatches.add( teamA + " VS " + teamB + " " + m.getDate_match().format(DateTimeFormatter.ofPattern("d/MM/yyyy")).toString());
+                    }
+                    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, strMatches);
+                    spinner.setAdapter(arrayAdapter);
+                    Toast.makeText(mainActivity, "Couldn't connect to database, retrieved data locally", Toast.LENGTH_LONG).show();
+                } else if(spinner.getAdapter().getCount() == 0){
 
-    @Override
+                    List<Match> matches =  mSQLiteDatabaseHelper.getData();
+                    List<String> strMatches = new ArrayList<String>();
+                    for (Match m : matches){
+                        String teamA = m.getTeam_a();
+                        String teamB = m.getTeam_b();
+                        strMatches.add( teamA + " VS " + teamB + " " + m.getDate_match().format(DateTimeFormatter.ofPattern("d/MM/yyyy")).toString());
+                    }
+                    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, strMatches);
+                    spinner.setAdapter(arrayAdapter);
+                    Toast.makeText(mainActivity, "Couldn't connect to database, retrieved data locally", Toast.LENGTH_LONG).show();
+
+                }
+            }
+            return false;
+        }
+    };
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.buttonSelect:
-                String[] match = spinner.getSelectedItem().toString().split("[ ]+");
-                String teamA = match[0];
-                String teamB = match[2];
-                String date = match[3];
 
-                System.out.println(match);
-                Toast.makeText(mainActivity, teamA + " " + teamB + " " + date, Toast.LENGTH_LONG).show();
-                AsyncCallerGetMatch task = new AsyncCallerGetMatch();
-                task.execute(match);
-                break;
+
+                    //Toast.makeText(mainActivity, teamA + " " + teamB + " " + date, Toast.LENGTH_LONG).show();
+                if (onlineMod) {
+                    String[] match = spinner.getSelectedItem().toString().split("[ ]+");
+                    String teamA = match[0];
+                    String teamB = match[2];
+                    String date = match[3];
+
+                    System.out.println(match);
+                    System.out.println(onlineMod);
+                    AsyncCallerGetMatch task = new AsyncCallerGetMatch();
+                    task.execute(match);
+                    break;
+                } else if(!onlineMod){
+                    String[] match = spinner.getSelectedItem().toString().split("[ ]+");
+                    String teamA = match[0];
+                    String teamB = match[2];
+                    String date = match[3];
+                    System.out.println(""+teamA);
+                    System.out.println(""+teamB);
+                    System.out.println(""+date);
+                    System.out.println(onlineMod);
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
+                    LocalDate ld = LocalDate.parse("1970-01-01");
+                    ld = LocalDate.parse(date, formatter);
+                    Match data = mSQLiteDatabaseHelper.getMatch(teamA, teamB, ld.toString());
+
+                    System.out.println(data.getScore_team_a() + " VS " + data.getTeam_b());
+                    CachePot.getInstance().push(data);
+                    mainActivity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new MatchFragment()).commit();
+                    break;
+                }
+
+
         }
     }
     /*
@@ -81,28 +147,35 @@ public class SelectMatchFragment extends Fragment implements View.OnClickListene
             try {
                 matches = Controller.getAllMatches();
                 for (Match m : matches){
-                    strMatches.add(m.getTeam_a() + " VS " + m.getTeam_b() + " " + m.getDate_match().format(DateTimeFormatter.ofPattern("d/MM/yyyy")).toString());
+                    String teamA = m.getTeam_a();
+                    String teamB = m.getTeam_b();
+                    strMatches.add( teamA + " VS " + teamB + " " + m.getDate_match().format(DateTimeFormatter.ofPattern("d/MM/yyyy")).toString());
                 }
+
                 return strMatches;
             } catch (Exception e) {
 
                 e.printStackTrace();
                 strMatches.add(0,"error");
                 strMatches.add(1,e.getMessage());
-                return strMatches;
+
             }
+
+            return null;
         }
 
 
         @Override
         protected void onPostExecute(List<String> matches) {
-            if (matches.get(0).equals("error")) {
-                Toast.makeText(mainActivity, matches.get(1), Toast.LENGTH_LONG).show();
+
+            if (matches == null) {
+                Toast.makeText(mainActivity, "error", Toast.LENGTH_LONG).show();
+
 
             } else {
-                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, matches);
+                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1, matches);
                 spinner.setAdapter(arrayAdapter);
-
+                onlineMod = true;
             }
 
         }

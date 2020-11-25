@@ -1,17 +1,23 @@
 package fr.android.progmob_poject;
 
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.kimkevin.cachepot.CachePot;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -28,6 +34,7 @@ public class MatchFragment extends Fragment implements View.OnClickListener {
     public TextView scores;
     public Button location;
     public MainActivity mainActivity;
+    public ImageView imageView;
 
 
     @Override
@@ -41,6 +48,7 @@ public class MatchFragment extends Fragment implements View.OnClickListener {
         scores = rootView.findViewById(R.id.scores);
         address = rootView.findViewById(R.id.address);
         date = rootView.findViewById(R.id.date);
+        imageView = rootView.findViewById(R.id.imageView);
         location = rootView.findViewById(R.id.buttonLocation);
         location.setOnClickListener(this);
         mainActivity = (MainActivity) getActivity();
@@ -49,6 +57,19 @@ public class MatchFragment extends Fragment implements View.OnClickListener {
         scores.setText(match.getScore_team_a() + "  -  " + match.getScore_team_b());
         address.setText(match.getAddress());
         date.setText(match.getDate_match().format(DateTimeFormatter.ofPattern("d/MM/yyyy")));
+        File file = null;
+        if (match.getPicture_path() != null) {
+            file = new File(match.getPicture_path());
+            Bitmap bitmap = null;
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(mainActivity.getContentResolver(), Uri.fromFile(file));
+                if (bitmap != null) {
+                    imageView.setImageBitmap(bitmap);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         return rootView;
     }
 /*

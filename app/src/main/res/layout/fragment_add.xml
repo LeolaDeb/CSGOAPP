@@ -233,7 +233,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/linearLayout5"
-            app:srcCompat="@drawable/ic_counter_strike_global_offensive_2" />
+            />
         <LinearLayout
             android:id="@+id/linearLayout6"
             android:layout_width="0dp"

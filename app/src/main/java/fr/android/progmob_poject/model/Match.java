@@ -15,6 +15,10 @@ public class Match {
 
 
 
+    private String picture_path;
+
+
+
     public Match(int id, String team_a, String team_b, String address, String coordinates, LocalDate date_match, int score_team_a, int score_team_b){
         this.id = id;
         this.team_a = team_a;
@@ -88,5 +92,12 @@ public class Match {
 
     public void setScore_team_a(int score_team_a) {
         this.score_team_a = score_team_a;
+    }
+    public String getPicture_path() {
+        return picture_path;
+    }
+
+    public void setPicture_path(String picture_path) {
+        this.picture_path = picture_path;
     }
 }
