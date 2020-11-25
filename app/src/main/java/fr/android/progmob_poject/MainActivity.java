@@ -1,5 +1,10 @@
 package fr.android.progmob_poject;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.location.Geocoder;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -9,6 +14,7 @@ import com.google.android.material.snackbar.Snackbar;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
@@ -19,6 +25,7 @@ import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity {
     public BottomNavigationView bottomNav;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +54,9 @@ public class MainActivity extends AppCompatActivity {
                         case R.id.nav_add:
                             selectedFragment = AddFragment.class;
                             break;
+                        case R.id.nav_loc:
+                            selectedFragment = MapFragment.class;
+                            break;
                     }
                     replaceFragments(selectedFragment);
                     //getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
@@ -54,42 +64,43 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 }
             };
-/*
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.bottom_navigation, menu);
-        return true;
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        Class selectedFragment = null;
-        switch (item.getItemId()) {
-            case R.id.nav_home:
-                selectedFragment = HomeFragment.class;
-                break;
-            case R.id.nav_matches:
-                selectedFragment = SelectMatchFragment.class;
-                break;
-            case R.id.nav_add:
-                selectedFragment = AddFragment.class;
-                break;
+    /*
+        @Override
+        public boolean onCreateOptionsMenu(Menu menu) {
+            // Inflate the menu; this adds items to the action bar if it is present.
+            getMenuInflater().inflate(R.menu.bottom_navigation, menu);
+            return true;
         }
-        replaceFragments(selectedFragment);
-        //getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-        //       selectedFragment).commit();
+
+        @Override
+        public boolean onOptionsItemSelected(MenuItem item) {
+            // Handle action bar item clicks here. The action bar will
+            // automatically handle clicks on the Home/Up button, so long
+            // as you specify a parent activity in AndroidManifest.xml.
+            int id = item.getItemId();
+
+            //noinspection SimplifiableIfStatement
+            Class selectedFragment = null;
+            switch (item.getItemId()) {
+                case R.id.nav_home:
+                    selectedFragment = HomeFragment.class;
+                    break;
+                case R.id.nav_matches:
+                    selectedFragment = SelectMatchFragment.class;
+                    break;
+                case R.id.nav_add:
+                    selectedFragment = AddFragment.class;
+                    break;
+            }
+            replaceFragments(selectedFragment);
+            //getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+            //       selectedFragment).commit();
 
 
-        return super.onOptionsItemSelected(item);
-    }
-*/
+            return super.onOptionsItemSelected(item);
+        }
+    */
     public void replaceFragments(Class fragmentClass) {
         Fragment fragment = null;
         try {

@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="Gradle: com.github.kimkevin:cachepot:1.2.0@aar">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/a27d65ef2bc2ce053f59d4c811afe9d6/jetified-cachepot-1.2.0/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/a27d65ef2bc2ce053f59d4c811afe9d6/jetified-cachepot-1.2.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/a27d65ef2bc2ce053f59d4c811afe9d6/jetified-cachepot-1.2.0/res" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.kimkevin/cachepot/1.2.0/a15627c3ff0503436af411493330fc3439b64f4b/cachepot-1.2.0-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.kimkevin/cachepot/1.2.0/36629f5f25cd46bcce24bcb09da36393c77a7775/cachepot-1.2.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

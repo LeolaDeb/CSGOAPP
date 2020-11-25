@@ -14,6 +14,11 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 import androidx.fragment.app.Fragment;
+
+import com.github.kimkevin.cachepot.CachePot;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 import fr.android.progmob_poject.jdbc.Controller;
 import fr.android.progmob_poject.model.Match;
 
@@ -29,7 +34,7 @@ public class AddFragment extends Fragment implements View.OnClickListener {
     public Button location;
     public Button picture;
     public MainActivity mainActivity;
-
+    private BottomNavigationView bottomNavigationView;
 
     @Override
     public View onCreateView(
@@ -52,7 +57,16 @@ public class AddFragment extends Fragment implements View.OnClickListener {
         location.setOnClickListener(this);
         picture.setOnClickListener(this);
         mainActivity = (MainActivity) getActivity();
+        bottomNavigationView = mainActivity.bottomNav;
 
+        String strAddress = CachePot.getInstance().pop("address");
+        LatLng strlatlng = CachePot.getInstance().pop("latLng");
+        if (strAddress != null){
+            address.setText(strAddress);
+        }
+        if (strlatlng != null){
+            coordinates.setText(strlatlng.latitude + ", " + strlatlng.longitude);
+        }
         return rootView;
     }
 /*
@@ -73,7 +87,8 @@ public class AddFragment extends Fragment implements View.OnClickListener {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.buttonLocation:
-                Toast.makeText(mainActivity, "button location clicked", Toast.LENGTH_LONG).show();
+                bottomNavigationView.setSelectedItemId(R.id.nav_loc);
+                //Toast.makeText(mainActivity, "button location clicked", Toast.LENGTH_LONG).show();
 
                 break;
             case R.id.buttonPicture:

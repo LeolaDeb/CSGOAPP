@@ -12,4 +12,8 @@
         android:id="@+id/nav_add"
         android:icon="@drawable/ic_baseline_add_circle_24"
         android:title="Add new match" />
+    <item
+        android:id="@+id/nav_loc"
+        android:icon="@drawable/ic_baseline_add_location_alt_24"
+        android:title="Add new location" />
 </menu>
